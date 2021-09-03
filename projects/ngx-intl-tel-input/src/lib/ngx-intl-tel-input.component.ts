@@ -1,5 +1,4 @@
-import * as lpn from 'google-libphonenumber';
-
+import * as lpn from 'libphonenumber-js';
 import {
 	Component,
 	ElementRef,
@@ -80,8 +79,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	phoneNumber = '';
 	allCountries: Array<Country> = [];
 	preferredCountriesInDropDown: Array<Country> = [];
-	// Has to be 'any' to prevent a need to install @types/google-libphonenumber by the package user...
-	phoneUtil: any = lpn.PhoneNumberUtil.getInstance();
+
 	disabled = false;
 	errors: Array<any> = ['Phone number is required.'];
 	countrySearchText = '';
@@ -224,10 +222,10 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 
 		// auto select country based on the extension (and areaCode if needed) (e.g select Canada if number starts with +1 416)
 		if (this.enableAutoCountrySelect) {
-			countryCode =
-				number && number.getCountryCode()
-					? this.getCountryIsoCode(number.getCountryCode(), number)
-					: this.selectedCountry.iso2;
+			countryCode = number.country.toLowerCase();
+				// number && number.country
+				// 	? this.getCountryIsoCode(number.countryCallingCode, number)
+				// 	: this.selectedCountry.iso2;
 			if (countryCode && countryCode !== this.selectedCountry.iso2) {
 				const newCountry = this.allCountries
 					.slice().sort((a, b) => {
@@ -249,7 +247,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 			this.propagateChange(null);
 		} else {
 			const intlNo = number
-				? this.phoneUtil.format(number, lpn.PhoneNumberFormat.INTERNATIONAL)
+				? number.formatInternational()
 				: '';
 
 			// parse phoneNumber if separate dial code is needed
@@ -261,12 +259,12 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 				number: this.value,
 				internationalNumber: intlNo,
 				nationalNumber: number
-					? this.phoneUtil.format(number, lpn.PhoneNumberFormat.NATIONAL)
+					? number.formatNational()
 					: '',
 				e164Number: number
-					? this.phoneUtil.format(number, lpn.PhoneNumberFormat.E164)
+					? number.format('E.164')
 					: '',
-				countryCode: countryCode.toUpperCase(),
+				countryCode: this.selectedCountry.iso2.toUpperCase(),
 				dialCode: '+' + this.selectedCountry.dialCode,
 			});
 		}
@@ -284,7 +282,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 				this.selectedCountry.iso2
 			);
 			const intlNo = number
-				? this.phoneUtil.format(number, lpn.PhoneNumberFormat.INTERNATIONAL)
+				? number.formatInternational()
 				: '';
 			// parse phoneNumber if separate dial code is needed
 			if (this.separateDialCode && intlNo) {
@@ -295,10 +293,10 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 				number: this.value,
 				internationalNumber: intlNo,
 				nationalNumber: number
-					? this.phoneUtil.format(number, lpn.PhoneNumberFormat.NATIONAL)
+					? number.formatNational()
 					: '',
 				e164Number: number
-					? this.phoneUtil.format(number, lpn.PhoneNumberFormat.E164)
+					? number.format('E.164')
 					: '',
 				countryCode: this.selectedCountry.iso2.toUpperCase(),
 				dialCode: '+' + this.selectedCountry.dialCode,
@@ -383,7 +381,11 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	): lpn.PhoneNumber {
 		let number: lpn.PhoneNumber;
 		try {
-			number = this.phoneUtil.parse(phoneNumber, countryCode.toUpperCase());
+			const countryCodeUpperCase = countryCode.toUpperCase()  as lpn.CountryCode;
+			if (lpn.isSupportedCountry(countryCodeUpperCase)) {
+				number = lpn.parsePhoneNumber(phoneNumber, countryCodeUpperCase);
+			}
+			
 		} catch (e) {}
 		return number;
 	}
@@ -407,12 +409,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	 */
 	private removeDialCode(phoneNumber: string): string {
 		const number = this.getParsedNumber(phoneNumber, this.selectedCountry.iso2);
-		phoneNumber = this.phoneUtil.format(
-			number,
-			lpn.PhoneNumberFormat[this.numberFormat]
-		);
 		if (phoneNumber.startsWith('+') && this.separateDialCode) {
-			phoneNumber = phoneNumber.substr(phoneNumber.indexOf(' ') + 1);
+			phoneNumber = phoneNumber.substr(phoneNumber.indexOf(number.countryCallingCode as string) + 1);
 		}
 		return phoneNumber;
 	}
@@ -462,10 +460,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	 */
 	protected getPhoneNumberPlaceHolder(countryCode: string): string {
 		try {
-			return this.phoneUtil.format(
-				this.phoneUtil.getExampleNumber(countryCode),
-				lpn.PhoneNumberFormat[this.numberFormat]
-			);
+			return '12345678'//return lpn.getExampleNumber(countryCode, lpn.ex).nationalNumber as string;
+			
 		} catch (e) {
 			return e;
 		}
