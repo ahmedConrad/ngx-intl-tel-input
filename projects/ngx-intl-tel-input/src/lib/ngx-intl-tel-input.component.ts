@@ -1,5 +1,5 @@
-import * as lpn from 'google-libphonenumber';
-
+import * as lpn from 'libphonenumber-js';
+import examples from 'libphonenumber-js/examples.mobile.json'
 import {
 	Component,
 	ElementRef,
@@ -80,8 +80,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	phoneNumber = '';
 	allCountries: Array<Country> = [];
 	preferredCountriesInDropDown: Array<Country> = [];
-	// Has to be 'any' to prevent a need to install @types/google-libphonenumber by the package user...
-	phoneUtil: any = lpn.PhoneNumberUtil.getInstance();
+
 	disabled = false;
 	errors: Array<any> = ['Phone number is required.'];
 	countrySearchText = '';
@@ -219,14 +218,18 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 		}
 
 		this.value = this.phoneNumber;
+		let intlNumber = this.value;
 		countryCode = countryCode || this.selectedCountry.iso2;
-		const number = this.getParsedNumber(this.phoneNumber, countryCode);
+		if (this.phoneNumber && !this.phoneNumber.startsWith('+') && this.selectedCountry?.dialCode) {
+			intlNumber = `+${this.selectedCountry.dialCode}${this.value}`;
+		}
+		const number = this.getParsedNumber(intlNumber, countryCode);
 
 		// auto select country based on the extension (and areaCode if needed) (e.g select Canada if number starts with +1 416)
 		if (this.enableAutoCountrySelect) {
 			countryCode =
-				number && number.getCountryCode()
-					? this.getCountryIsoCode(number.getCountryCode(), number)
+				number
+					? this.getCountryIsoCode(number.countryCallingCode as string, number)
 					: this.selectedCountry.iso2;
 			if (countryCode && countryCode !== this.selectedCountry.iso2) {
 				const newCountry = this.allCountries
@@ -249,24 +252,25 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 			this.propagateChange(null);
 		} else {
 			const intlNo = number
-				? this.phoneUtil.format(number, lpn.PhoneNumberFormat.INTERNATIONAL)
+				? number.formatInternational()
 				: '';
 
 			// parse phoneNumber if separate dial code is needed
 			if (this.separateDialCode && intlNo) {
 				this.value = this.removeDialCode(intlNo);
+				this.phoneNumber = this.value;
 			}
 
 			this.propagateChange({
 				number: this.value,
 				internationalNumber: intlNo,
 				nationalNumber: number
-					? this.phoneUtil.format(number, lpn.PhoneNumberFormat.NATIONAL)
+					? number.formatNational()
 					: '',
 				e164Number: number
-					? this.phoneUtil.format(number, lpn.PhoneNumberFormat.E164)
+					? number.format('E.164')
 					: '',
-				countryCode: countryCode.toUpperCase(),
+				countryCode: this.selectedCountry.iso2.toUpperCase(),
 				dialCode: '+' + this.selectedCountry.dialCode,
 			});
 		}
@@ -284,7 +288,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 				this.selectedCountry.iso2
 			);
 			const intlNo = number
-				? this.phoneUtil.format(number, lpn.PhoneNumberFormat.INTERNATIONAL)
+				? number.formatInternational()
 				: '';
 			// parse phoneNumber if separate dial code is needed
 			if (this.separateDialCode && intlNo) {
@@ -295,10 +299,10 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 				number: this.value,
 				internationalNumber: intlNo,
 				nationalNumber: number
-					? this.phoneUtil.format(number, lpn.PhoneNumberFormat.NATIONAL)
+					? number.formatNational()
 					: '',
 				e164Number: number
-					? this.phoneUtil.format(number, lpn.PhoneNumberFormat.E164)
+					? number.format('E.164')
 					: '',
 				countryCode: this.selectedCountry.iso2.toUpperCase(),
 				dialCode: '+' + this.selectedCountry.dialCode,
@@ -383,7 +387,9 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	): lpn.PhoneNumber {
 		let number: lpn.PhoneNumber;
 		try {
-			number = this.phoneUtil.parse(phoneNumber, countryCode.toUpperCase());
+			const countryCodeUpperCase = countryCode.toUpperCase()  as lpn.CountryCode;
+			number = lpn.parsePhoneNumber(phoneNumber, countryCodeUpperCase);
+			
 		} catch (e) {}
 		return number;
 	}
@@ -407,12 +413,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	 */
 	private removeDialCode(phoneNumber: string): string {
 		const number = this.getParsedNumber(phoneNumber, this.selectedCountry.iso2);
-		phoneNumber = this.phoneUtil.format(
-			number,
-			lpn.PhoneNumberFormat[this.numberFormat]
-		);
 		if (phoneNumber.startsWith('+') && this.separateDialCode) {
-			phoneNumber = phoneNumber.substr(phoneNumber.indexOf(' ') + 1);
+			phoneNumber = phoneNumber.substr(phoneNumber.indexOf(number.countryCallingCode as string) + number.countryCallingCode.length + 1);
 		}
 		return phoneNumber;
 	}
@@ -424,35 +426,22 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	 * @param number PhoneNumber object
 	 */
 	private getCountryIsoCode(
-		countryCode: number,
+		countryCode: string,
 		number: lpn.PhoneNumber
 	): string | undefined {
-		// Will use this to match area code from the first numbers
-		const rawNumber = number['values_']['2'].toString();
 		// List of all countries with countryCode (can be more than one. e.x. US, CA, DO, PR all have +1 countryCode)
 		const countries = this.allCountries.filter(
 			(c) => c.dialCode === countryCode.toString()
 		);
 		// Main country is the country, which has no areaCodes specified in country-code.ts file.
 		const mainCountry = countries.find((c) => c.areaCodes === undefined);
-		// Secondary countries are all countries, which have areaCodes specified in country-code.ts file.
-		const secondaryCountries = countries.filter(
-			(c) => c.areaCodes !== undefined
-		);
+
 		let matchedCountry = mainCountry ? mainCountry.iso2 : undefined;
 
-		/*
-			Iterate over each secondary country and check if nationalNumber starts with any of areaCodes available.
-			If no matches found, fallback to the main country.
-		*/
-		secondaryCountries.forEach((country) => {
-			country.areaCodes.forEach((areaCode) => {
-				if (rawNumber.startsWith(areaCode)) {
-					matchedCountry = country.iso2;
-				}
-			});
-		});
 
+		if (number.country && number.country.toLowerCase() !== matchedCountry) {
+			matchedCountry = number.country.toLowerCase();
+		}
 		return matchedCountry;
 	}
 
@@ -462,10 +451,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges {
 	 */
 	protected getPhoneNumberPlaceHolder(countryCode: string): string {
 		try {
-			return this.phoneUtil.format(
-				this.phoneUtil.getExampleNumber(countryCode),
-				lpn.PhoneNumberFormat[this.numberFormat]
-			);
+			const lpnCountryCode = countryCode as lpn.CountryCode
+			return lpn.formatNumber((lpn.getExampleNumber(lpnCountryCode, examples).nationalNumber as string), lpnCountryCode, 'NATIONAL');
 		} catch (e) {
 			return e;
 		}
