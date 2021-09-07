@@ -1,3 +1,5 @@
+# Forked from ([https://github.com/webcat12345/ngx-intl-tel-input]())
+
 # International Telephone Input for Angular (NgxIntlTelInput)
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
@@ -10,11 +12,11 @@ An Angular package for entering and validating international telephone numbers. 
 
 **Compatibility:**
 
-Validation with [google-libphonenumber](https://github.com/ruimarinho/google-libphonenumber)
+Validation with [libphonenumber-js](https://www.npmjs.com/package/libphonenumber-js)
 
 | ngx-intl-tel-input | Angular        | ngx-bootstrap |
 | ------------------ | -------------- | ------------- |
-| 3.x.x              | 9.x.x - 11.x.x | 6.0.0         |
+| 3.x.x              | 9.x.x - 12.x.x | 6.0.0         |
 | 2.x.x              | 8.x.x - 9.1.x  | 5.6.x         |
 
 ## Installation
@@ -23,7 +25,7 @@ Validation with [google-libphonenumber](https://github.com/ruimarinho/google-lib
 
 `$ npm install intl-tel-input@17.0.3 --save`
 
-`$ npm install google-libphonenumber --save`
+`$ npm install libphonenumber-js --save`
 
 `$ ng add ngx-bootstrap`
 
@@ -68,15 +70,6 @@ imports: [NgxIntlTelInputModule];
 
 Refer to main app in this repository for working example.
 
-Or this:
-
-[Stackblitz Demo (Angular 8)](https://stackblitz.com/edit/ngx-intl-tel-input-demo-ng-8)
-
-[Stackblitz Demo (Angular 9)](https://stackblitz.com/edit/ngx-intl-tel-input-demo-ng-9)
-
-[Stackblitz Demo (Angular 10)](https://stackblitz.com/edit/ngx-intl-tel-input-demo-ng-10)
-
-[Stackblitz Demo (Angular 11)](https://stackblitz.com/edit/ngx-intl-tel-input-demo-ng-11)
 
 ```html
 <form #f="ngForm" [formGroup]="phoneForm">
@@ -90,7 +83,6 @@ Or this:
 		[selectFirstCountry]="false"
 		[selectedCountryISO]="CountryISO.India"
 		[maxLength]="15"
-		[phoneValidation]="true"
 		[inputId]="my-input-id"
 		name="phone"
 		formControlName="phone"
@@ -114,7 +106,6 @@ Or this:
 | searchCountryPlaceholder | `string`                 | `'Search Country'`                | Placeholder value for `searchCountryField`                                                                    |
 | maxLength                | `number`                 | `None`                            | Add character limit.                                                                                          |
 | selectFirstCountry       | `boolean`                | `true`                            | Selects first country from `preferredCountries` if is set. If not then uses main list.                        |
-| phoneValidation          | `boolean`                | `true`                            | Disable phone validation.                                                                                     |
 | inputId                  | `string`                 | `phone`                           | Unique ID for `<input>` element.                                                                              |
 | selectedCountryISO       | `<CountryISO>`           | `None`                            | Set specific country on load.                                                                                 |
 | separateDialCode         | `boolean`                | `false`                           | Visually separate dialcode into the drop down element.                                                        |

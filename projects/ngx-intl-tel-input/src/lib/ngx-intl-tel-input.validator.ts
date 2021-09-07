@@ -19,49 +19,41 @@ export const phoneNumberValidator = (control: any) => {
 		? el.querySelector('input[type="tel"]')
 		: undefined;
 	if (inputBox) {
-		const id = inputBox.id;
-		const isCheckValidation = inputBox.getAttribute('validation');
-		if (isCheckValidation === 'true') {
-			const isRequired = control.errors && control.errors.required === true;
-			const error = { validatePhoneNumber: { valid: false } };
+		const isRequired = control.errors && control.errors.required === true;
+		const error = { validatePhoneNumber: { valid: false } };
 
-			inputBox.setCustomValidity('Invalid field.');
+		inputBox.setCustomValidity('Invalid field.');
 
-			let number: lpn.PhoneNumber;
+		let number: lpn.PhoneNumber;
 
-			try {
-				number = lpn.parsePhoneNumber(
-					control.value.number,
-					control.value.countryCode
-				);
-			} catch (e) {
-				if (isRequired === true) {
+		try {
+			number = lpn.parsePhoneNumber(
+				control.value.number,
+				control.value.countryCode
+			);
+		} catch (e) {
+			if (isRequired === true) {
+				return error;
+			} else {
+				inputBox.setCustomValidity('');
+			}
+		}
+
+		if (control.value) {
+			if (!number) {
+				return error;
+			} else {
+				if (
+					!lpn.isValidNumberForRegion(
+						number.nationalNumber,
+						control.value.countryCode
+					)
+				) {
 					return error;
 				} else {
 					inputBox.setCustomValidity('');
 				}
 			}
-
-			if (control.value) {
-				if (!number) {
-					return error;
-				} else {
-					if (
-						!lpn.isValidNumberForRegion(
-							number.nationalNumber,
-							control.value.countryCode
-						)
-					) {
-						return error;
-					} else {
-						inputBox.setCustomValidity('');
-					}
-				}
-			}
-		} else if (isCheckValidation === 'false') {
-			inputBox.setCustomValidity('');
-
-			control.clearValidators();
 		}
 	}
 	return;
