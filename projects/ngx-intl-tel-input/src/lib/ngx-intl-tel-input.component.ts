@@ -1,18 +1,20 @@
 import * as lpn from 'libphonenumber-js';
 import examples from 'libphonenumber-js/examples.mobile.json'
 import {
+	ChangeDetectorRef,
 	Component,
 	ElementRef,
 	EventEmitter,
-	forwardRef,
 	Input,
 	OnChanges,
 	OnInit,
+	Optional,
 	Output,
+	Self,
 	SimpleChanges,
 	ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 
 import { setTheme } from 'ngx-bootstrap/utils';
 
@@ -22,6 +24,7 @@ import { SearchCountryField } from './enums/search-country-field.enum';
 import type { ChangeData } from './interfaces/change-data';
 import type { Country } from './model/country.model';
 import { PhoneNumberFormat } from './enums/phone-number-format.enum';
+import { take } from 'rxjs/operators';
 
 @Component({
 	// tslint:disable-next-line: component-selector
@@ -29,13 +32,7 @@ import { PhoneNumberFormat } from './enums/phone-number-format.enum';
 	templateUrl: './ngx-intl-tel-input.component.html',
 	styleUrls: ['./bootstrap-dropdown.css', './ngx-intl-tel-input.component.css'],
 	providers: [
-		CountryCode,
-		{
-			provide: NG_VALUE_ACCESSOR,
-			// tslint:disable-next-line:no-forward-ref
-			useExisting: forwardRef(() => NgxIntlTelInputComponent),
-			multi: true,
-		}
+		CountryCode
 	],
 })
 export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValueAccessor {
@@ -55,6 +52,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 	@Input() selectedCountryISO: CountryISO;
 	@Input() inputId = 'phone';
 	@Input() separateDialCode = false;
+	@Input() markPristineOnExternalChange = false;
 	separateDialCodeClass: string;
 
 	@Output() readonly countryChange = new EventEmitter<Country>();
@@ -83,10 +81,16 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 	onTouched = () => {};
 	propagateChange = (_: ChangeData) => {};
 
-	constructor(private countryCodeData: CountryCode) {
+	constructor(private countryCodeData: CountryCode,
+		@Optional() @Self() public ngControl: NgControl,
+		private cdr: ChangeDetectorRef) {
 		// If this is not set, ngx-bootstrap will try to use the bs3 CSS (which is not what we've embedded) and will
 		// Add the wrong classes and such
 		setTheme('bs4');
+		if (ngControl) {
+			// NOTE: Because we need access to the form control itself, we have remove NG_VALUE_ACCESSOR from providers
+			ngControl.valueAccessor = this;
+		}
 	}
 
 	ngOnInit() {
@@ -350,9 +354,25 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 			this.init();
 		}
 		this.phoneNumber = obj;
-		setTimeout(() => {
-			this.onPhoneNumberChange();
-		}, 1);
+
+		this.onPhoneNumberChange();
+		this.cdr.detectChanges();
+		//since this is user input during initialization or patch, so better to mark it as pristine
+		if (this.markPristineOnExternalChange) {
+			if (this.ngControl.control) {
+				this.ngControl.control.statusChanges.pipe(take(1)).subscribe(() => {
+					this.ngControl.control.markAsPristine();
+				})
+			}
+		}
+	}
+
+	ngAfterContentInit() {
+		if (this.ngControl.control) {
+			this.ngControl.control.statusChanges.pipe(take(1)).subscribe(() => {
+				this.ngControl.control.markAsPristine();
+			})
+		}
 	}
 
 	resolvePlaceholder(): string {
