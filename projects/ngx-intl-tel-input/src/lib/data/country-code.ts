@@ -1260,6 +1260,11 @@ export class CountryCode {
 			0
 		],
 		[
+			'United States Minor Outlying Islands',
+			CountryISO.UnitedStatesMinorOutlyingIslands,
+			'246'
+		],
+		[
 			'Uruguay',
 			CountryISO.Uruguay,
 			'598'

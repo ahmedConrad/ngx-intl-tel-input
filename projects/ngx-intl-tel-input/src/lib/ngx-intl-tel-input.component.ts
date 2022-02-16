@@ -519,10 +519,12 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 	 */
 	private updateSelectedCountry() {
 		if (this.selectedCountryISO) {
-			this.selectedCountry = this.allCountries.find((c) => {
+			const selectedCountry = this.allCountries.find((c) => {
 				return c.iso2.toLowerCase() === this.selectedCountryISO.toLowerCase();
 			});
-			if (this.selectedCountry) {
+			console.log("Selected Country ISO:", this.selectedCountry)
+			if (selectedCountry) {
+				this.selectedCountry = selectedCountry;
 				if (this.phoneNumber) {
 					this.onPhoneNumberChange();
 				} else {

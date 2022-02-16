@@ -230,6 +230,7 @@ export enum CountryISO {
 	UnitedArabEmirates = 'ae',
 	UnitedKingdom = 'gb',
 	UnitedStates = 'us',
+	UnitedStatesMinorOutlyingIslands = 'um',
 	Uruguay = 'uy',
 	Uzbekistan = 'uz',
 	Vanuatu = 'vu',
