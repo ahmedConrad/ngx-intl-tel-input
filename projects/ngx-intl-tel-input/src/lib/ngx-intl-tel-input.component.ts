@@ -57,6 +57,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 
 	@Output() readonly countryChange = new EventEmitter<Country>();
 
+	fallbackPlaceholder = '1234 5678';
+
 	selectedCountry: Country = {
 		areaCodes: undefined,
 		dialCode: '',
@@ -462,12 +464,19 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 	 * @param countryCode string
 	 */
 	protected getPhoneNumberPlaceHolder(countryCode: string): string {
+		let placeHolder = '';
 		try {
 			const lpnCountryCode = countryCode as lpn.CountryCode
-			return lpn.formatNumber((lpn.getExampleNumber(lpnCountryCode, examples).nationalNumber as string), lpnCountryCode, 'NATIONAL');
+			const exampleNumber = lpn.getExampleNumber(lpnCountryCode, examples);
+			if (exampleNumber) {
+				placeHolder = lpn.formatNumber((exampleNumber.nationalNumber as string), lpnCountryCode, 'NATIONAL');
+			} else  {
+				placeHolder = this.fallbackPlaceholder;
+			}
 		} catch (e) {
-			return e;
+			console.error(`Exception while getting placeholder for countryCode [${countryCode}]`, e);
 		}
+		return placeHolder;
 	}
 
 	/**
