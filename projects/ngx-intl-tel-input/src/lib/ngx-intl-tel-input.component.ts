@@ -14,7 +14,7 @@ import {
 	SimpleChanges,
 	ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { setTheme } from 'ngx-bootstrap/utils';
 
@@ -36,7 +36,7 @@ import { take } from 'rxjs/operators';
 	],
 })
 export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValueAccessor {
-	@Input() value = '';
+	@Input() value: string | undefined = '';
 	@Input() preferredCountries: Array<string> = [];
 	@Input() enablePlaceholder = true;
 	@Input() customPlaceholder: string;
@@ -47,7 +47,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 	@Input() searchCountryFlag = false;
 	@Input() searchCountryField: SearchCountryField[] = [SearchCountryField.All];
 	@Input() searchCountryPlaceholder = 'Search Country';
-	@Input() maxLength = '';
+	@Input() maxLength: number;
 	@Input() selectFirstCountry = true;
 	@Input() selectedCountryISO: CountryISO;
 	@Input() inputId = 'phone';
@@ -70,7 +70,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 		priority: 0,
 	};
 
-	phoneNumber = '';
+	phoneNumber: string | undefined = '';
 	allCountries: Array<Country> = [];
 	preferredCountriesInDropDown: Array<Country> = [];
 
@@ -108,7 +108,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 		) {
 			this.updateSelectedCountry();
 		}
-		if (changes.preferredCountries) {
+		if (changes['preferredCountries']) {
 			this.updatePreferredCountries();
 		}
 		this.checkSeparateDialCodeStyle();
@@ -159,6 +159,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 			return;
 		}
 		const countrySearchTextLower = this.countrySearchText.toLowerCase();
+    // @ts-ignore
 		const country = this.allCountries.filter((c) => {
 			if (this.searchCountryField.indexOf(SearchCountryField.All) > -1) {
 				// Search in all fields
@@ -222,7 +223,10 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 		if (this.phoneNumber && !this.phoneNumber.startsWith('+') && this.selectedCountry?.dialCode) {
 			intlNumber = `+${this.selectedCountry.dialCode}${this.value}`;
 		}
-		const number = this.getParsedNumber(intlNumber, countryCode);
+		let number;
+		if (intlNumber) {
+			number = this.getParsedNumber(intlNumber, countryCode);
+		}
 
 		// auto select country based on the extension (and areaCode if needed) (e.g select Canada if number starts with +1 416)
 		if (this.enableAutoCountrySelect) {
@@ -248,7 +252,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 		if (!this.value) {
 			// Reason: avoid https://stackoverflow.com/a/54358133/1617590
 			// tslint:disable-next-line: no-null-keyword
-			this.propagateChange(null);
+			// @ts-ignore
+      this.propagateChange(null);
 		} else {
 			const intlNo = number
 				? number.formatInternational()
@@ -275,7 +280,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 		}
 	}
 
-	public onCountrySelect(country: Country, el): void {
+	public onCountrySelect(country: Country, el: { focus: () => void; }): void {
 		this.setSelectedCountry(country);
 
 		this.checkSeparateDialCodeStyle();
@@ -309,7 +314,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 		} else {
 			// Reason: avoid https://stackoverflow.com/a/54358133/1617590
 			// tslint:disable-next-line: no-null-keyword
-			this.propagateChange(null);
+			// @ts-ignore
+      this.propagateChange(null);
 		}
 
 		el.focus();
@@ -363,7 +369,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 		if (this.markPristineOnExternalChange) {
 			if (this.ngControl.control) {
 				this.ngControl.control.statusChanges.pipe(take(1)).subscribe(() => {
-					this.ngControl.control.markAsPristine();
+					this.ngControl.control?.markAsPristine();
 				})
 			}
 		}
@@ -372,7 +378,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 	ngAfterContentInit() {
 		if (this.ngControl.control) {
 			this.ngControl.control.statusChanges.pipe(take(1)).subscribe(() => {
-				this.ngControl.control.markAsPristine();
+				this.ngControl.control?.markAsPristine();
 			})
 		}
 	}
@@ -405,7 +411,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 			const countryCodeUpperCase = countryCode.toUpperCase()  as lpn.CountryCode;
 			number = lpn.parsePhoneNumber(phoneNumber, countryCodeUpperCase);
 		} catch (e) {}
-		return number;
+		// @ts-ignore
+    return number;
 	}
 
 	/**
@@ -539,7 +546,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 				} else {
 					// Reason: avoid https://stackoverflow.com/a/54358133/1617590
 					// tslint:disable-next-line: no-null-keyword
-					this.propagateChange(null);
+					// @ts-ignore
+          this.propagateChange(null);
 				}
 			}
 		}

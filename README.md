@@ -15,8 +15,8 @@ An Angular package for entering and validating international telephone numbers. 
 Validation with [libphonenumber-js](https://www.npmjs.com/package/libphonenumber-js)
 
 | ngx-intl-tel-input | Angular        | ngx-bootstrap |
-| ------------------ | -------------- | ------------- |
-| 3.x.x              | 9.x.x - 12.x.x | 6.0.0         |
+| ------------------ |----------------| ------------- |
+| 0.0.5              | 9.x.x - 13.x.x | 6.0.0         |
 | 2.x.x              | 8.x.x - 9.1.x  | 5.6.x         |
 
 ## Installation
@@ -70,6 +70,8 @@ imports: [NgxIntlTelInputModule];
 
 Refer to main app in this repository for working example.
 
+
+[Stackblitz Demo (Angular 12)](https://stackblitz.com/edit/ngx-intl-tel-input-demo-ng-12)
 
 ```html
 <form #f="ngForm" [formGroup]="phoneForm">
@@ -162,6 +164,24 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/all-contri
   </tr>
   <tr>
     <td align="center"><a href="https://crutchcorn.dev"><img src="https://avatars.githubusercontent.com/u/9100169?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Corbin Crutchley</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=crutchcorn" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.linkedin.com/in/nayeli-beckham-martínez/"><img src="https://avatars.githubusercontent.com/u/78670199?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nayeli Beckham</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=NayeBeckham" title="Code">💻</a> <a href="#platform-NayeBeckham" title="Packaging/porting to new platform">📦</a> <a href="#question-NayeBeckham" title="Answering Questions">💬</a> <a href="#maintenance-NayeBeckham" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="http://rushvora.com"><img src="https://avatars.githubusercontent.com/u/602333?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rushabh Vora</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=rushvora" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/KarimTayie"><img src="https://avatars.githubusercontent.com/u/29521303?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Karim Tayie</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=KarimTayie" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/imadilkhalil"><img src="https://avatars.githubusercontent.com/u/19613930?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Adil Khalil</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=imadilkhalil" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/ambersz"><img src="https://avatars.githubusercontent.com/u/647791?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alice Zhao</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=ambersz" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.felipecespedes.co"><img src="https://avatars.githubusercontent.com/u/11846311?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Felipe Céspedes</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=felipecespedes" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/bb-sonam"><img src="https://avatars.githubusercontent.com/u/60337996?v=4?s=100" width="100px;" alt=""/><br /><sub><b>bb-sonam</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=bb-sonam" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/alQlagin"><img src="https://avatars.githubusercontent.com/u/3256488?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alex Kulagin</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=alQlagin" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/subodhyadav712"><img src="https://avatars.githubusercontent.com/u/36027830?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Subodh Kumar Yadav</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=subodhyadav712" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/harshalganbote"><img src="https://avatars.githubusercontent.com/u/60728890?v=4?s=100" width="100px;" alt=""/><br /><sub><b>harshalganbote</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=harshalganbote" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/christianopaets"><img src="https://avatars.githubusercontent.com/u/43338174?v=4?s=100" width="100px;" alt=""/><br /><sub><b>christianopaets</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=christianopaets" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/velechva"><img src="https://avatars.githubusercontent.com/u/13340931?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Victor Velechovsky</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=velechva" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.mapianist.com"><img src="https://avatars.githubusercontent.com/u/7777929?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Heo</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=leo6104" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://wagner.pink"><img src="https://avatars.githubusercontent.com/u/5000255?v=4?s=100" width="100px;" alt=""/><br /><sub><b>jlw</b></sub></a><br /><a href="https://github.com/webcat12345/ngx-intl-tel-input/commits?author=jenslw" title="Code">💻</a></td>
   </tr>
 </table>
 

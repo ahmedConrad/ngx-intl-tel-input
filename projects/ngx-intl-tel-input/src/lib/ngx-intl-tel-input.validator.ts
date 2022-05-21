@@ -1,3 +1,4 @@
+import { ValidationErrors } from '@angular/forms';
 import * as lpn from 'libphonenumber-js';
 
 /*
@@ -15,16 +16,16 @@ export const phoneNumberValidator = (control: any) => {
 	}
 	// Find <input> inside injected nativeElement and get its "id".
 	const el: HTMLElement = control.nativeElement as HTMLElement;
-	const inputBox: HTMLInputElement = el
+	const inputBox: HTMLInputElement | any = el
 		? el.querySelector('input[type="tel"]')
 		: undefined;
 	if (inputBox) {
 		const isRequired = control.errors && control.errors.required === true;
-		const error = { validatePhoneNumber: { valid: false } };
+		const error: ValidationErrors = { validatePhoneNumber: { valid: false } };
 
 		inputBox.setCustomValidity('Invalid field.');
 
-		let number: lpn.PhoneNumber;
+		let number: lpn.PhoneNumber | undefined;
 
 		try {
 			number = lpn.parsePhoneNumber(
@@ -32,7 +33,7 @@ export const phoneNumberValidator = (control: any) => {
 				control.value.countryCode
 			);
 		} catch (e) {
-			if (isRequired === true) {
+			if (isRequired) {
 				return error;
 			} else {
 				inputBox.setCustomValidity('');
