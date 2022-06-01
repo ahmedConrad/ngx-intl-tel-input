@@ -1,4 +1,4 @@
-import { ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 import * as lpn from 'libphonenumber-js';
 
 /*
@@ -10,9 +10,10 @@ More about this approach and reasons for this:
 https://github.com/angular/angular/issues/18025
 https://stackoverflow.com/a/54075119/1617590
 */
-export const phoneNumberValidator = (control: any) => {
+export const phoneNumberValidator = (myControl: AbstractControl) => {
+  let control = myControl as any;
 	if (!control.value) {
-		return;
+		return null;
 	}
 	// Find <input> inside injected nativeElement and get its "id".
 	const el: HTMLElement = control.nativeElement as HTMLElement;
@@ -57,5 +58,5 @@ export const phoneNumberValidator = (control: any) => {
 			}
 		}
 	}
-	return;
+	return null;
 };
