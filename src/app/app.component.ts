@@ -15,6 +15,7 @@ export class AppComponent {
 	SearchCountryField = SearchCountryField;
 	CountryISO = CountryISO;
 	PhoneNumberFormat = PhoneNumberFormat;
+
 	preferredCountries: CountryISO[] = [
 		CountryISO.UnitedStates,
 		CountryISO.UnitedKingdom,
@@ -22,6 +23,7 @@ export class AppComponent {
 	phoneForm = new FormGroup({
 		phone: new FormControl(undefined, [Validators.required]),
 	});
+	PHONE_REGEX_COMPLEX = /[0-9\+\-\(\)\w@.\ ]/;
 
 	changePreferredCountries() {
 		this.preferredCountries = [CountryISO.India, CountryISO.Canada];

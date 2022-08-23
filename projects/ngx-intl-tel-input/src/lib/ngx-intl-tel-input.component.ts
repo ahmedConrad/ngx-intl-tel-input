@@ -53,6 +53,8 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 	@Input() inputId = 'phone';
 	@Input() separateDialCode = false;
 	@Input() markPristineOnExternalChange = false;
+	@Input() allowedChars = undefined;
+
 	separateDialCodeClass: string;
 
 	@Output() readonly countryChange = new EventEmitter<Country>();
@@ -316,7 +318,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 	}
 
 	public onInputKeyPress(event: KeyboardEvent): void {
-		const allowedChars = /[0-9\+\-\(\)\ ]/;
+		const allowedChars = this.allowedChars ? this.allowedChars : /[0-9\+\-\(\)\ ]/;
 		const allowedCtrlChars = /[axcv]/; // Allows copy-pasting
 		const allowedOtherKeys = [
 			'ArrowLeft',
