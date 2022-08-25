@@ -255,7 +255,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 			const intlNo = number
 				? number.formatInternational()
 				: '';
-
+			let phone = this.phoneNumber
 			// parse phoneNumber if separate dial code is needed
 			if (this.separateDialCode && intlNo) {
 				this.value = this.removeDialCode(intlNo);
@@ -273,6 +273,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 					: '',
 				countryCode: this.selectedCountry.iso2.toUpperCase(),
 				dialCode: '+' + this.selectedCountry.dialCode,
+				phoneNumber: phone
 			});
 		}
 	}
@@ -307,6 +308,7 @@ export class NgxIntlTelInputComponent implements OnInit, OnChanges, ControlValue
 					: '',
 				countryCode: this.selectedCountry.iso2.toUpperCase(),
 				dialCode: '+' + this.selectedCountry.dialCode,
+				phoneNumber: this.phoneNumber,
 			});
 		} else {
 			// Reason: avoid https://stackoverflow.com/a/54358133/1617590

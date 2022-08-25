@@ -5,4 +5,5 @@ export interface ChangeData {
 	e164Number?: string;
 	countryCode?: string;
 	dialCode?: string;
+	phoneNumber?: string;
 }
