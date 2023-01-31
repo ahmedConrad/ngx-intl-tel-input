@@ -3,12 +3,26 @@
 # International Telephone Input for Angular (NgxIntlTelInput)
 
 ### Changes done from after forking:
-1. Replace the use of google-libphonenumber with libphonenumber-js. (this library has smaller size)
+1. Replace the use of google-libphonenumber with libphonenumber-js. (this library has smaller size).  
+    - projects/ngx-intl-tel-input/package.json
+    - projects/ngx-intl-tel-input/src/lib/ngx-intl-tel-input.validator.ts
+    - projects/ngx-intl-tel-input/src/lib/ngx-intl-tel-input.component.ts
 2. Previously, the phone validation was done by passing `phoneValidation (boolean)`, now the validator has been exported separately and can be used as required
+    - projects/ngx-intl-tel-input/src/public_api.ts
+    - projects/ngx-intl-tel-input/src/lib/ngx-intl-tel-input.validator.ts
 3. The field got marked as dirty when the phone number was passed to it after it was initialized (e.g. after API response. The field will now be marked pristine if `markPristineOnExternalChange` is set to `true`.
 4. Country list got jumbled up as indicated in https://github.com/webcat12345/ngx-intl-tel-input/issues/396. The fix was https://github.com/webcat12345/ngx-intl-tel-input/pull/400
 5. It was upgraded to work with angular-12
+	  - angular.json
+    - package.json
+  	- src/polyfills.ts
+  	- tsconfig.json
+    -	src/test.ts
+  	- src/environments/environment.ts
+
 6. In order create a dual field supporting email and mobile phone, we added a parameter `allowedChars` which can be passed to it so it can accept other characters as well instead of just ignoring them.
+	  - projects/ngx-intl-tel-input/src/lib/ngx-intl-tel-input.component.ts
+7. Added country code 246
 
 [![npm version](https://badge.fury.io/js/@ahmedasif%2Fngx-intl-tel-input.svg)](https://badge.fury.io/js/@ahmedasif%2Fngx-intl-tel-input) [![npm](https://img.shields.io/npm/dm/localeval.svg)](https://www.npmjs.com/package/@ahmedasif/ngx-intl-tel-input)
 
