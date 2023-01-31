@@ -2,9 +2,14 @@
 
 # International Telephone Input for Angular (NgxIntlTelInput)
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
+### Changes done from after forking:
+1. Replace the use of google-libphonenumber with libphonenumber-js. (this library has smaller size)
+2. Previously, the phone validation was done by passing `phoneValidation (boolean)`, now the validator has been exported separately and can be used as required
+3. The field got marked as dirty when the phone number was passed to it after it was initialized (e.g. after API response), it has been fixed in it.
+4. Country list got jumbled up as indicated in https://github.com/webcat12345/ngx-intl-tel-input/issues/396. The fix was https://github.com/webcat12345/ngx-intl-tel-input/pull/400
+5. It was upgraded to work with angular-12
 
-[![Build Status](https://travis-ci.org/webcat12345/ngx-intl-tel-input.svg?branch=master)](https://travis-ci.org/webcat12345/ngx-intl-tel-input) [![npm version](https://badge.fury.io/js/ngx-intl-tel-input.svg)](https://badge.fury.io/js/ngx-intl-tel-input) [![npm](https://img.shields.io/npm/dm/localeval.svg)](https://www.npmjs.com/package/ngx-intl-tel-input)
+[![npm version](https://badge.fury.io/js/@ahmedasif%2Fngx-intl-tel-input.svg)](https://badge.fury.io/js/@ahmedasif%2Fngx-intl-tel-input) [![npm](https://img.shields.io/npm/dm/localeval.svg)](https://www.npmjs.com/package/@ahmedasif/ngx-intl-tel-input)
 
 An Angular package for entering and validating international telephone numbers. It adds a flag dropdown to any input, detects the user's country, displays a relevant placeholder and provides formatting/validation methods.
 
