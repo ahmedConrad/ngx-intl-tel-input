@@ -119,15 +119,6 @@ Following formats are supported
 - INTERNATIONAL // Produces "+41 44 668 18 00"
 - E164 // Produces "+41446681800"
 
-## Library Contributions
-
-- Fork repo.
-- Update `./projects/ngx-intl-tel-input`
-- Build / test library.
-- Update `./src/app` with new functionality.
-- Update README.md
-- Pull request.
-
 ### Helpful commands
 
 - Build lib: `$ npm run build_lib`
