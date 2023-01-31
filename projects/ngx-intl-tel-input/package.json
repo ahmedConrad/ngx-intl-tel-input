@@ -1,5 +1,5 @@
 {
-	"name": "@ahmedasif/ngx-intl-tel-input",
+	"name": "@cialfo/ngx-intl-tel-input",
 	"version": "0.0.7",
 	"peerDependencies": {
 		"@angular/common": "8.x - 12.x",
@@ -11,11 +11,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ahmedasif1/ngx-intl-tel-input"
+		"url": "git+https://github.com/cialfo/ngx-intl-tel-input"
 	},
 	"author": {
-		"name": "ahmedasif",
-		"email": "thatisme1+npm@gmail.com"
+		"name": "cialfo",
+		"email": "dev@cialfo.com.sg"
 	},
 	"keywords": [
 		"angular",
@@ -33,6 +33,6 @@
 	],
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/ahmedasif1/ngx-intl-tel-input/issues"
+		"url": "https://github.com/cialfo/ngx-intl-tel-input/issues"
 	}
 }

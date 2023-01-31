@@ -171,3 +171,21 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/all-contri
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+# Development
+
+To make changes to this project
+- take a branch out of the master branch.
+- make your changes to the branch.
+- try & validate changes in the demo project (under the `src/` directory)
+- if everything works as expected, merge your branch into the master branch.
+
+## Publishing to NPM
+Before you can start using the package with the latest changes, you need to publish the package to NPM with a new version. To publish a new version of the package:
+- Go to `projects/ngx-intl-tel-input` and bump the `version` number in the `package.json` file.
+- Run `npm run package` in the root directory
+- Go to `dist/ngx-splide`
+- Login to Cialfo NPM account using `npm adduser` command (find credentials in vault)
+- Run `npm publish --access public`
+- Go the NPM page of the package https://www.npmjs.com/package/@cialfo/ngx-intl-tel-input to verify the latest version is published.
+- update the version of the `ngx-intl-tel-input` package in the `package.json` file of the project where the library is used and do an `npm install`.
